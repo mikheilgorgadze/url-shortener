@@ -63,7 +63,7 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
     
     currentSuffix = generateUrlSuffix()
 
-    shortenedUrl := fmt.Sprintf("http://localhost:9090/%s", currentSuffix)
+    shortenedUrl := fmt.Sprintf("%s/%s",r.Host, currentSuffix)
 
     data := PageData{
         ShortenedUrl: shortenedUrl,
