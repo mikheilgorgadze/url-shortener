@@ -25,5 +25,5 @@ services:
       - "traefik.http.routers.url-shortener.rule=Host(`shrtly.cloud`)"
       - "traefik.http.routers.url-shortener.entrypoints=websecure"  
       - "traefik.http.routers.url-shortener.tls.certresolver=myresolver"
-  volumes:
-    letsencrypt:
+volumes:
+  letsencrypt:
