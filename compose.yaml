@@ -11,6 +11,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
   url-shortener:
     image: ghcr.io/mikheilgorgadze/url-shortener:prod
+    deploy:
+      mode: replicated
+      replicas: 3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.guestbook.rule=Host(`shrtly.cloud`)"
