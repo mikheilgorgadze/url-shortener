@@ -12,6 +12,7 @@ import (
 type PageData struct{
     Name string
     ShortenedUrl string
+    OriginalUrl string
     Error string
 }
 
@@ -67,6 +68,8 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 
     data := PageData{
         ShortenedUrl: shortenedUrl,
+        OriginalUrl: originalUrl,
+
     }
     tmpl.ExecuteTemplate(w, "shorten.html", data)
 

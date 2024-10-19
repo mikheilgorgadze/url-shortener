@@ -18,7 +18,9 @@
 <body>
     <h1>Url Shortener</h1>
 
-    <h3 id="url">{{.ShortenedUrl}}<h3>
+    <h3 id="url">
+        <a href="{{.OriginalUrl}}">{{.ShortenedUrl}}</a>
+    <h3>
 
         <button type="button" onClick="copyURL(this, {{.ShortenedUrl}})">Copy</button>
         <button type="button">
