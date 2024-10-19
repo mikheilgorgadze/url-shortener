@@ -1,4 +1,12 @@
 services:
+  watchtower:
+    image: containrrr/watchtower
+    command:
+      - "--label-enable"
+      - "--interval"
+      - "30"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   reverse-proxy:
     image: traefik:v3.1
     command:
@@ -29,5 +37,6 @@ services:
       - "traefik.http.routers.url-shortener.rule=Host(`shrtly.cloud`)"
       - "traefik.http.routers.url-shortener.entrypoints=websecure"  
       - "traefik.http.routers.url-shortener.tls.certresolver=myresolver"
+      - "com.centurylinklabs.watchtower.enable=true"
 volumes:
   letsencrypt:
