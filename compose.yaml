@@ -18,4 +18,6 @@ services:
     build: .
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.guestbook.rule=Host(`zenful.cloud`)"
+      - "traefik.http.routers.guestbook.entrypoints=websecure"
   
