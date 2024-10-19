@@ -4,10 +4,16 @@ services:
     command:
       - "--api.insecure=true"
       - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=mishogorgadze41@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
-      - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
+      - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
   url-shortener:
     image: ghcr.io/mikheilgorgadze/url-shortener:prod
@@ -16,5 +22,8 @@ services:
       replicas: 3
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.guestbook.rule=Host(`shrtly.cloud`)"
-  
+      - "traefik.http.routers.url-shortener.rule=Host(`shrtly.cloud`)"
+      - "traefik.http.routers.url-shortener.entrypoints=websecure"  
+      - "traefik.http.routers.url-shortener.tls.certresolver=myresolver"
+  volumes:
+    letsencrypt:
