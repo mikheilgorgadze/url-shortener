@@ -46,11 +46,11 @@ func main() {
 
 
     srv := http.Server{
-        Addr: ":80",
+        Addr: ":9090",
         Handler: router,
     }
 
-    fmt.Println("Starting website")
+    fmt.Println("Starting website HEEY")
     err := srv.ListenAndServe()
     if err != nil && !errors.Is(err, http.ErrServerClosed) {
         fmt.Println("Error occured: ", err)
