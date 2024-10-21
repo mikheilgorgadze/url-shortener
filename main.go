@@ -38,6 +38,7 @@ func main() {
         _, err := url.ParseRequestURI(originalUrl)
 
         if err != nil {
+            w.WriteHeader(http.StatusNotFound)
             tmpl.ExecuteTemplate(w, "error.html", PageData{
                 Error: "404 Not Found",
             })
