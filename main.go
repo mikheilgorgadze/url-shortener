@@ -7,6 +7,7 @@ import (
 	"net/http"
     "github.com/catinello/base62"
     "net/url"
+    "url-shortener/middleware"
 )
 
 type PageData struct{
@@ -17,7 +18,6 @@ type PageData struct{
 }
 
 var currentSuffix string
-var suffixToUrl = map[string]string{}
 var generatedCode int = 100
 var originalUrl string
 
@@ -36,6 +36,7 @@ func main() {
 
     router.HandleFunc("GET /{suffix}", func(w http.ResponseWriter, r *http.Request) {
         _, err := url.ParseRequestURI(originalUrl)
+
         if err != nil {
             tmpl.ExecuteTemplate(w, "error.html", PageData{
                 Error: "404 Not Found",
@@ -45,10 +46,9 @@ func main() {
         http.Redirect(w, r, originalUrl, http.StatusFound)
     })
 
-
     srv := http.Server{
         Addr: ":9090",
-        Handler: router,
+        Handler: middleware.Logging(router),
     }
 
     fmt.Println("Starting website HEEY")
