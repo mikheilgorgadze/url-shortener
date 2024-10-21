@@ -6,7 +6,6 @@
         <title>URL Shortener</title>
     </head>
     <body>
-        <!-- Here we have a templated value of .Name, passed in from Go -->
         <h1>{{.Name }}</h1>
         <form method="POST" action="/shorten">
             <input type="text" placeholder="Enter link here" name="url" aria-label="URL">
