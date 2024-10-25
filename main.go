@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-    "github.com/catinello/base62"
-    "net/url"
-    "url-shortener/middleware"
+	"net/url"
+	"path/filepath"
+	"url-shortener/middleware"
+
+	"github.com/catinello/base62"
 )
 
 type PageData struct{
@@ -25,6 +27,11 @@ var tmpl = template.Must(template.New("").ParseGlob("./templates/*"))
 
 func main() {
     router := http.NewServeMux()
+
+    fileServer := http.FileServer(http.Dir("images"))
+    router.Handle("GET /images/{file...}", fileServer)
+   
+    router.HandleFunc("GET /favicon.ico", faviconHandler)
 
     router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request){
         tmpl.ExecuteTemplate(w, "index.html", PageData{
@@ -52,7 +59,7 @@ func main() {
         Handler: middleware.Logging(router),
     }
 
-    fmt.Println("Starting website HEEY")
+    fmt.Println("Starting website ...")
     err := srv.ListenAndServe()
     if err != nil && !errors.Is(err, http.ErrServerClosed) {
         fmt.Println("Error occured: ", err)
@@ -74,6 +81,11 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
     }
     tmpl.ExecuteTemplate(w, "shorten.html", data)
 
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "image/x-icon")
+    http.ServeFile(w, r, filepath.Join("images", "favicon.ico"))
 }
 
 func generateUrlSuffix() string {
