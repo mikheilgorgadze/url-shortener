@@ -59,7 +59,7 @@ func main() {
         Handler: middleware.Logging(router),
     }
 
-    fmt.Println("Starting website ...")
+    fmt.Println("Starting website")
     err := srv.ListenAndServe()
     if err != nil && !errors.Is(err, http.ErrServerClosed) {
         fmt.Println("Error occured: ", err)
