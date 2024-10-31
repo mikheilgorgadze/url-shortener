@@ -73,6 +73,7 @@ USER appuser
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 COPY ./templates ./templates
+COPY ./images ./images
 
 ENV MIGRATIONS_URL=file://migrations
 
