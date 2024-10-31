@@ -33,26 +33,11 @@ func main() {
    
     router.HandleFunc("GET /favicon.ico", faviconHandler)
 
-    router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request){
-        tmpl.ExecuteTemplate(w, "index.html", PageData{
-            Name: "Url Shortener",
-        })
-    })
+    router.HandleFunc("GET /", indexPageHandler)
 
     router.HandleFunc("POST /shorten", shortenHandler)
 
-    router.HandleFunc("GET /{suffix}", func(w http.ResponseWriter, r *http.Request) {
-        _, err := url.ParseRequestURI(originalUrl)
-
-        if err != nil {
-            w.WriteHeader(http.StatusNotFound)
-            tmpl.ExecuteTemplate(w, "error.html", PageData{
-                Error: "404 Not Found",
-            })
-            return
-        }
-        http.Redirect(w, r, originalUrl, http.StatusFound)
-    })
+    router.HandleFunc("GET /{suffix}", urlRedirectHandler)
 
     srv := http.Server{
         Addr: ":9090",
@@ -81,6 +66,25 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
     }
     tmpl.ExecuteTemplate(w, "shorten.html", data)
 
+}
+
+func indexPageHandler(w http.ResponseWriter, r *http.Request){
+        tmpl.ExecuteTemplate(w, "index.html", PageData{
+            Name: "Url Shortener",
+        })
+}
+
+func urlRedirectHandler(w http.ResponseWriter, r *http.Request) {
+    _, err := url.ParseRequestURI(originalUrl)
+
+    if err != nil {
+        w.WriteHeader(http.StatusNotFound)
+        tmpl.ExecuteTemplate(w, "error.html", PageData{
+            Error: "404 Not Found",
+        })
+        return
+    }
+    http.Redirect(w, r, originalUrl, http.StatusFound)
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
