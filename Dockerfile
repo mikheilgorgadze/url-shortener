@@ -54,6 +54,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk --update add \
         ca-certificates \
         tzdata \
+	sqlite \
+    	sqlite-dev \
+    	gcc \
+    	musl-dev \
         && \
         update-ca-certificates
 
@@ -70,6 +74,10 @@ RUN adduser \
     appuser
 USER appuser
 
+# Create directory for SQLite database
+RUN mkdir -p /data && \
+    chown appuser:appuser /data
+
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 COPY ./templates ./templates
@@ -79,6 +87,9 @@ ENV MIGRATIONS_URL=file://migrations
 
 # Expose the port that the application listens on.
 EXPOSE 9090 
+
+# Set the database path to a persistent location
+ENV DB_PATH=/data/database.db
 
 # What the container should run when it is started.
 ENTRYPOINT [ "/bin/server" ]

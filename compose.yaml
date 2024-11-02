@@ -37,5 +37,9 @@ services:
       - "traefik.http.routers.url-shortener.entrypoints=websecure"  
       - "traefik.http.routers.url-shortener.tls.certresolver=myresolver"
       - "com.centurylinklabs.watchtower.enable=true"
+    volumes:
+      - sqlite_data:/data
 volumes:
   letsencrypt:
+  sqlite_data:
+    driver: local
