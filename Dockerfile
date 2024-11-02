@@ -11,6 +11,13 @@
 ARG GO_VERSION=1.23.2
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 LABEL org.opencontainers.image.source=https://github.com/mikheilgorgadze/url-shortener
+
+
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /src 
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -32,7 +39,7 @@ ARG TARGETARCH
 # source code into the container.
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,target=. \
-    CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server .
+    CGO_ENABLED=1 GOARCH=$TARGETARCH go build -o /bin/server .
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -50,16 +57,17 @@ FROM alpine:latest AS final
 LABEL org.opencontainers.image.source=https://github.com/mikheilgorgadze/url-shortener
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk --update add \
+RUN apk add --no-cache \
         ca-certificates \
         tzdata \
 	    sqlite \
     	sqlite-dev \
     	gcc \
     	musl-dev \
-        && \
-        update-ca-certificates
+        libc6-compat \
+        gcompat
+
+RUN update-ca-certificates
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
