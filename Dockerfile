@@ -39,7 +39,10 @@ ARG TARGETARCH
 # source code into the container.
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,target=. \
-    CGO_ENABLED=1 GOARCH=$TARGETARCH go build -o /bin/server .
+    CGO_ENABLED=1 GOARCH=$TARGETARCH \
+    go build -tags 'sqlite_omit_load_extension' \
+    -ldflags '-extldflags "-static"' \
+    -o /bin/server .
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -63,9 +66,7 @@ RUN apk add --no-cache \
 	    sqlite \
     	sqlite-dev \
     	gcc \
-    	musl-dev \
-        libc6-compat \
-        gcompat
+    	musl-dev
 
 RUN update-ca-certificates
 
