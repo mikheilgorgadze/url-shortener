@@ -81,4 +81,4 @@ ENV MIGRATIONS_URL=file://migrations
 EXPOSE 9090 
 
 # What the container should run when it is started.
-ENTRYPOINT [ "/bin/server" ]
+ENTRYPOINT [ "/bin" ]
