@@ -78,7 +78,7 @@ func InsertURL(generatedUrl GeneratedUrl) (error) {
 
 func GetURLByShortCode(shortCode string) (string, error) {
     var longUrl string
-    query := `SELECT long_url FROM generated_urls u WHERE u.short_code = ?)`
+    query := `SELECT long_url FROM generated_urls u WHERE u.short_code = ?`
 
     err := db.QueryRow(query, shortCode).Scan(&longUrl)
     if err == sql.ErrNoRows {
