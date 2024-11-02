@@ -54,7 +54,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk --update add \
         ca-certificates \
         tzdata \
-	sqlite \
+	    sqlite \
     	sqlite-dev \
     	gcc \
     	musl-dev \
@@ -72,11 +72,12 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
-USER appuser
 
 # Create directory for SQLite database
 RUN mkdir -p /data && \
     chown appuser:appuser /data
+
+USER appuser
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
