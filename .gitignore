@@ -1,2 +1,3 @@
 # ignore compiled main file
 /main
+/data/*.db
