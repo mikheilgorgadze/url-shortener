@@ -60,7 +60,8 @@ FROM alpine:latest AS final
 LABEL org.opencontainers.image.source=https://github.com/mikheilgorgadze/url-shortener
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
-RUN apk add --no-cache \
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk --update add \
         ca-certificates \
         tzdata \
 	    sqlite \
