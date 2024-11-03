@@ -3,6 +3,9 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"log"
+	"os"
+	"path/filepath"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -19,7 +22,20 @@ var db *sql.DB
 
 func InitDB() error {
     var err error
-    db, err = sql.Open("sqlite3", "./data/database.db")
+    dbPath := os.Getenv("DB_PATH")
+
+    log.Printf("DB Path: %v", dbPath)
+
+    if dbPath == "" {
+        dbPath = "./data/database.db"
+    }
+    
+    err = os.MkdirAll(filepath.Dir(dbPath), 0755)
+    if err != nil {
+        return err
+    }
+
+    db, err = sql.Open("sqlite3", dbPath)
     if err != nil {
         return err
     }

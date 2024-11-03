@@ -11,6 +11,13 @@
 ARG GO_VERSION=1.23.2
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 LABEL org.opencontainers.image.source=https://github.com/mikheilgorgadze/url-shortener
+
+
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /src 
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -32,7 +39,10 @@ ARG TARGETARCH
 # source code into the container.
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,target=. \
-    CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server .
+    CGO_ENABLED=1 GOARCH=$TARGETARCH \
+    go build -tags 'sqlite_omit_load_extension' \
+    -ldflags '-extldflags "-static"' \
+    -o /bin/server .
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -54,8 +64,12 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk --update add \
         ca-certificates \
         tzdata \
-        && \
-        update-ca-certificates
+	    sqlite \
+    	sqlite-dev \
+    	gcc \
+    	musl-dev
+
+RUN update-ca-certificates
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
@@ -68,6 +82,11 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+
+# Create directory for SQLite database
+RUN mkdir -p /data && \
+    chown appuser:appuser /data
+
 USER appuser
 
 # Copy the executable from the "build" stage.
@@ -79,6 +98,9 @@ ENV MIGRATIONS_URL=file://migrations
 
 # Expose the port that the application listens on.
 EXPOSE 9090 
+
+# Set the database path to a persistent location
+ENV DB_PATH=/data/database.db
 
 # What the container should run when it is started.
 ENTRYPOINT [ "/bin/server" ]
