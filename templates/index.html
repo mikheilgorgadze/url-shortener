@@ -1,60 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" class="h-screen">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>URL Shortener</title>
-    </head>
-    <body>
-        <h1>{{.Name }}</h1>
-        <form method="POST" action="/shorten">
-            <input type="text" placeholder="Enter link here" name="url" aria-label="URL">
-            <button type="submit">Shorten</button>
-        </form>
-
-        <div class="footer">
-            <footer>
-                <p>Made By Misho</p>
-            </footer>
-        </div>
-    </body>
-
-    <style>
-    .h-screen{
-        color-scheme: dark;
-        font-family: monospace;
-        text-align: center;
-        color: #d1d0c5;
-    }
-
-    h1 {
-        font-size: 4em;
-        margin-top: 100px;
-    }
-
-
-    form {
-        border-radius: 5px;
-    }
-    form input {
-        height: 2em;
-        width: 20em;
-    }
-    form button {
-        height: 2.5em;
-        width: 8em;
-        border-radius: 0.5em;
-        background-color: #121212;
-        color: #d1d0c5;
-        border: 2px solid #d1d0c5;
-    }
-    
-    .footer {
-        position: absolute;
-        bottom: 0;
-        width: 90vw;
-        height: 50px;
-        z-index: 10;
-    }
-    </style>
-</html>
+{{ define "index-content" }}
+<h1>{{.Name }}</h1>
+<form id="shorten-form" method="POST" action="/shorten">
+    <input type="text" placeholder="Enter link here" name="url" aria-label="URL">
+    <button type="submit">Shorten</button>
+</form>
+<div class="footer">
+</div>
+{{ end }}

@@ -20,14 +20,15 @@ type PageData struct{
     ShortenedUrl string
     OriginalUrl string
     Error string
+    TemplateName string
 }
 
-var currentSuffix string
+//var currentSuffix string
 var generatedCode int = 100000
 const INCREMENT = 50000
 //var originalUrl string
 
-var tmpl = template.Must(template.New("").ParseGlob("./templates/*")) 
+var tmpl = template.Must(template.New("").ParseGlob("./templates/*.html"))
 
 func main() {
     var err error
@@ -41,6 +42,8 @@ func main() {
 
     fileServer := http.FileServer(http.Dir("images"))
     router.Handle("GET /images/{file...}", fileServer)
+    router.Handle("GET /templates/styles.css", http.StripPrefix("/templates/", http.FileServer(http.Dir("templates"))))
+    router.Handle("GET /templates/script.js", http.StripPrefix("/templates/", http.FileServer(http.Dir("templates"))))
    
     router.HandleFunc("GET /favicon.ico", faviconHandler)
 
@@ -55,7 +58,8 @@ func main() {
         Handler: middleware.Logging(router),
     }
 
-    fmt.Println("Starting website")
+    //fmt.Println("Starting website")
+    log.Println(time.Since(time.Now()), "starting website")
     err = srv.ListenAndServe()
     if err != nil && !errors.Is(err, http.ErrServerClosed) {
         fmt.Println("Error occured: ", err)
@@ -72,16 +76,18 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
     if _, err := url.ParseRequestURI(originalUrl); err != nil {
         data := PageData {
             Error: "Invalid URL provided",
+            TemplateName: "error",
         }
-        tmpl.ExecuteTemplate(w, "error.html", data)
+        tmpl.ExecuteTemplate(w, "base.html", data)
         return
     }
 
     currentSuffix, err := generateUniqueShortenCode(); 
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
-        tmpl.ExecuteTemplate(w, "error.html", PageData{
+        tmpl.ExecuteTemplate(w, "base.html", PageData{
             Error: "Something unexpected happened",
+            TemplateName: "error",
         })
         return
     }
@@ -99,23 +105,26 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
         log.Printf("Error storing URL: %v", err)
         data := PageData {
             Error: "Failed to create shortened URL",
+            TemplateName: "error",
         }
-        tmpl.ExecuteTemplate(w, "error.html", data)
+        tmpl.ExecuteTemplate(w, "base.html", data)
         return
     }
 
     data := PageData{
         ShortenedUrl: shortenedUrl,
         OriginalUrl: originalUrl,
+        TemplateName: "shorten",
     }
 
-    tmpl.ExecuteTemplate(w, "shorten.html", data)
+    tmpl.ExecuteTemplate(w, "base.html", data)
 
 }
 
 func indexPageHandler(w http.ResponseWriter, r *http.Request){
-        tmpl.ExecuteTemplate(w, "index.html", PageData{
+        tmpl.ExecuteTemplate(w, "base.html", PageData{
             Name: "Url Shortener",
+            TemplateName: "index",
         })
 }
 
@@ -125,8 +134,9 @@ func urlRedirectHandler(w http.ResponseWriter, r *http.Request) {
 
     if err != nil {
         w.WriteHeader(http.StatusNotFound)
-        tmpl.ExecuteTemplate(w, "error.html", PageData{
+        tmpl.ExecuteTemplate(w, "base.html", PageData{
             Error: "404 Not Found",
+            TemplateName: "error",
         })
         return
     }

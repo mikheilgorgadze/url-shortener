@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" class="h-screen">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/templates/styles.css">
+    <script type="text/javascript" src="/templates/script.js"></script>
+</head>
+<body>
+    <main>
+    {{if eq .TemplateName "index"}}
+        {{ block "index-content" .}} {{ end }}
+    {{ end }}
+
+    {{if eq .TemplateName "shorten"}}
+        {{ block "shorten-content" .}} {{ end }}
+    {{ end }}
+    
+    {{if eq .TemplateName "error"}}
+        {{ block "error-content" .}} {{ end }}
+    {{ end }}
+    </main>
+
+
+    <footer>
+        <p> &copy; Misho Gorgadze</p>
+    </footer>
+</body>
+</html>
