@@ -5,33 +5,36 @@
     color: #d1d0c5;
 }
 
- h1 {
-     font-size: 4em;
-     margin-top: 100px;
- }
- #shorten-form {
-     border-radius: 5px;
- }
- #shorten-form input {
-     height: 2em;
-     width: 20em;
- }
- #shorten-form button {
-     height: 2.5em;
-     width: 8em;
-     border-radius: 0.5em;
-     background-color: #121212;
-     color: #d1d0c5;
-     border: 2px solid #d1d0c5;
- }
- 
- footer {
-     position: absolute;
-     bottom: 0;
-     width: 90vw;
-     height: 50px;
-     z-index: 10;
- }
+h1 {
+    font-size: 4em;
+    margin-top: 100px;
+}
+
+#shorten-form {
+    border-radius: 5px;
+}
+
+#shorten-form input {
+    height: 2em;
+    width: 20em;
+}
+
+#shorten-form button {
+    height: 2.5em;
+    width: 8em;
+    border-radius: 0.5em;
+    background-color: #121212;
+    color: #d1d0c5;
+    border: 2px solid #d1d0c5;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 90vw;
+    height: 50px;
+    z-index: 10;
+}
 
 #url {
     font-size: 2em;
@@ -48,6 +51,7 @@ button {
     color: #d1d0c5;
     border: 2px solid #d1d0c5;
 }
+
 a {
     text-decoration: none;
     color: mintcream;
