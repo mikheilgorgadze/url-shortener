@@ -31,9 +31,14 @@ h1 {
 footer {
     position: absolute;
     bottom: 0;
-    width: 90vw;
-    height: 50px;
-    z-index: 10;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
 }
 
 #url {
