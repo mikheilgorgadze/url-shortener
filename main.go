@@ -23,10 +23,8 @@ type PageData struct{
     TemplateName string
 }
 
-//var currentSuffix string
 var generatedCode int = 100000
 const INCREMENT = 50000
-//var originalUrl string
 
 var tmpl = template.Must(template.New("").ParseGlob("./templates/*.html"))
 
@@ -58,7 +56,6 @@ func main() {
         Handler: middleware.Logging(router),
     }
 
-    //fmt.Println("Starting website")
     log.Println(time.Since(time.Now()), "starting website")
     err = srv.ListenAndServe()
     if err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -140,7 +137,6 @@ func urlRedirectHandler(w http.ResponseWriter, r *http.Request) {
         })
         return
     }
-   // _, err := url.ParseRequestURI(originalUrl)
 
     http.Redirect(w, r, originalUrl, http.StatusFound)
 }
