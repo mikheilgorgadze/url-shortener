@@ -1,14 +1,50 @@
-.h-screen{
-    color-scheme: dark;
+:root {
+    color-scheme: light dark;
     font-family: monospace;
     text-align: center;
-    color: #d1d0c5;
+    --text-color: #2C3E50;
+    --bkg-color: #ECF0F1;
+    --btn-txt-color: #ECF0F1;
+    --btn-bkg-color: #2C3E50;
+}
+
+:root.dark-theme {
+    --text-color: #ECF0F1;
+    --bkg-color: #2C3E50;
+    --btn-txt-color: #2C3E50;
+    --btn-bkg-color: #ECF0F1;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  /* defaults to dark theme */
+  :root {
+    --text-color: #ECF0F1;
+    --bkg-color: #2C3E50;
+    --btn-txt-color: #2C3E50;
+    --btn-bkg-color: #ECF0F1;
+  }
+  :root.light-theme {
+    --text-color: #2C3E50;
+    --bkg-color: #ECF0F1;
+    --btn-txt-color: #ECF0F1;
+    --btn-bkg-color: #2C3E50;
+  }
+}
+
+body {
+    background:  var(--bkg-color);
+}
+
+* {
+    color: var(--text-color);
 }
 
 h1 {
     font-size: 4em;
     margin-top: 100px;
 }
+
 
 #shorten-form {
     border-radius: 5px;
@@ -23,9 +59,13 @@ h1 {
     height: 2.5em;
     width: 8em;
     border-radius: 0.5em;
-    background-color: #121212;
-    color: #d1d0c5;
+    background-color: var(--btn-bkg-color);
+    color: var(--btn-txt-color);
     border: 2px solid #d1d0c5;
+}
+
+button a {
+    color: var(--btn-txt-color)
 }
 
 footer {
@@ -52,12 +92,12 @@ button {
     height: 2.5em;
     width: 8em;
     border-radius: 0.5em;
-    background-color: #121212;
-    color: #d1d0c5;
+    background-color: var(--btn-bkg-color);
+    color: var(--btn-txt-color);
     border: 2px solid #d1d0c5;
 }
 
 a {
     text-decoration: none;
-    color: mintcream;
+    color: var(--txt-color);
 }
